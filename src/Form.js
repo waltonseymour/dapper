@@ -1,13 +1,15 @@
 import * as React from "react";
 
+import { Button, Intent } from "@blueprintjs/core";
+
 export class Form extends React.Component {
     render() {
-        return <div>
-            <input type="text" placeholder="address"
+        return <div className="pt-form-group send-form">
+            <input type="text" className="pt-input pt-fill" placeholder="address"
                 value={this.props.address} onChange={this.props.onAddressChange} />
-            <input type="number" placeholder="amount"
+            <input className="pt-input pt-fill" type="number" placeholder="amount"
                 value={this.props.amount} onChange={this.props.onAmountChange} />
-            <button onClick={this.props.onSubmit}>send ETH</button>
+            <Button className="pt-fill" iconName={"confirm"} intent={Intent.PRIMARY} onClick={this.props.onSubmit}>Send ETH</Button>
         </div>;
     }
 }

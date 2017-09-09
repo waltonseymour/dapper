@@ -2,15 +2,24 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.send-form {
+  width: 400px;
+  margin-left:auto;
+  margin-right: auto;
+}
+
+.send-form input {
+  margin-bottom: 5px;
 }
 
 .App-header {
   background-color: #222;
   height: 150px;
   padding: 20px;
+  color: white;
+}
+
+.App-header h2 {
   color: white;
 }
 
