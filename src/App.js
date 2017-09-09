@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import { Form } from "./Form";
 import './App.css';
 
 class App extends Component {
   state = {
     wallet: undefined,
-    balance: undefined
+    balance: undefined,
+    amount: 0,
+    address: ""
   }
   componentDidMount() {
     window.addEventListener("load", () => {
@@ -20,10 +23,35 @@ class App extends Component {
     });
   }
 
+  sendEther = () => {
+    const txn = {
+      from: this.state.wallet,
+      to: this.state.address,
+      value: this.state.amount * Math.pow(10, 18)
+    };
+
+    window.web3.eth.sendTransaction(txn, (err, result) => {
+      console.log(err);
+      console.log(result);
+    });
+  }
+
+
   render() {
     let body;
     if (this.state.wallet) {
-      body = <div>your account is: {this.state.wallet} <br /> your balance is: {this.state.balance / Math.pow(10, 18)} ETH</div>;
+      body = <div>
+        your account is: {this.state.wallet} <br />
+        your balance is: {this.state.balance / Math.pow(10, 18)} ETH <br />
+        <br />
+          <Form
+            address={this.state.address}
+            amount={this.state.amount}
+            onAddressChange={(e) => this.setState({ address: e.target.value })}
+            onAmountChange={(e) => this.setState({ amount: e.target.value })}
+            onSubmit={this.sendEther}
+          />
+        </div>;
     } else {
       body = "Loading...";
     }
@@ -33,9 +61,9 @@ class App extends Component {
         <div className="App-header">
           <h2>Ethereum account viewer</h2>
         </div>
-        <p className="App-intro">
+        <div className="App-intro">
           {body}
-        </p>
+        </div>
       </div>
     );
   }
