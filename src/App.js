@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Form } from "./Form";
+
+import * as blockies from "blockies";
 import './App.css';
 
 class App extends Component {
@@ -16,10 +18,16 @@ class App extends Component {
         window.web3.eth.getAccounts((err, accounts) => {
           wallet = accounts[0];
           window.web3.eth.getBalance(wallet, (err, balance) => {
-            this.setState({ wallet, balance });
+            this.setState({ wallet, balance });            
+            const icon = blockies({
+              seed: wallet
+            });
+            this.refs.wallet.prepend(icon);
           });
         });
       }
+
+      
     });
   }
 
@@ -40,9 +48,9 @@ class App extends Component {
   render() {
     let body;
     if (this.state.wallet) {
-      body = <div>
-        your account is: {this.state.wallet} <br />
-        your balance is: {this.state.balance / Math.pow(10, 18)} ETH <br />
+      body = <div className="main-body">
+        your account is: <h5 ref="wallet"> {this.state.wallet} </h5>
+        your balance is: <h5> {this.state.balance / Math.pow(10, 18)} ETH </h5>
         <br />
           <Form
             address={this.state.address}

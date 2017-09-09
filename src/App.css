@@ -12,10 +12,16 @@
   margin-bottom: 5px;
 }
 
+
+.main-body canvas {
+  vertical-align: middle;
+}
+
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 60px;
   padding: 20px;
+  margin-bottom: 60px;
   color: white;
 }
 
