@@ -1,22 +1,18 @@
 pragma solidity ^0.4.14;
 
+import "github.com/oraclize/ethereum-api/oraclizeAPI.sol";
 
-contract Lottery {
-    event LotteryWon(address winner, uint amount);
+
+contract Lottery is usingOraclize {
     address owner;
+    mapping (bytes32 => address) bets;
+    mapping (bytes32 => uint) betAmts;
 
-    function Lottery () payable {
+
+    event newRandomNumber(string result);
+
+    function Lottery() public {
         owner = msg.sender;
-    }
-
-    function gamble() payable public {
-        require(msg.value > 0);
-        require(this.balance > msg.value * 2);
-        uint randomNumber = uint(block.blockhash(block.number-1)) % 3;
-        if (randomNumber == 1) {
-            LotteryWon(msg.sender, this.balance);
-            msg.sender.transfer(msg.value * 5 / 2);
-        }
     }
 
     function() payable {}
@@ -24,7 +20,7 @@ contract Lottery {
     function sendMoneyToOwner(uint amount) {
         require(amount > 0);
         require(msg.sender == owner);
-        owner.transfer(amount)
+        owner.transfer(amount);
     }
 
     function kill() { 
@@ -32,4 +28,19 @@ contract Lottery {
         selfdestruct(owner);
     }
 
+    function gamble() payable public {
+        require(msg.value > 0);
+        require(this.balance > msg.value * 2);
+        bytes32 myid = oraclize_query(0, "WolframAlpha", "random number between 1 and 6");
+        bets[myid] = msg.sender;
+        betAmts[myid] = msg.value;
+    }
+
+    function __callback(bytes32 myid, string result, bytes proof) {
+        require(msg.sender == oraclize_cbAddress());
+        newRandomNumber(result);
+        if (uint(bytes(result)[0]) - 48 > 3) {
+            bets[myid].transfer(betAmts[myid] * 2);
+        }
+    }
 }
